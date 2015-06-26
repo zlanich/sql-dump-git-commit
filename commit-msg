@@ -1,0 +1,25 @@
+#!/bin/bash
+
+source ./sql-dump.config
+
+# Set variables
+
+GIT_USER=$(git config user.email)
+DUMP_LOC=./sql-dump/$GIT_USER
+if [ -z ${DB_USER+x} ]; then DB_USER="root"; fi;
+if [ -z ${DB_PASSWD+x} ]; then DB_USER="root"; fi;
+if [ -z ${MYSQL_DUMP_BINARY+x} ]; then MYSQL_DUMP_BINARY=/Applications/MAMP/Library/bin/mysqldump; fi;
+MESSAGE=`head -n 10 $1`
+
+# Variables to be sourced form config file:
+# DB_NAME
+
+if [[ "$MESSAGE" == *#sql* ]]
+then
+    echo "Found #sql in $MESSAGE, will dump db to [$DUMP_LOC] and add to commit."
+    # Make backup dir if not already there
+    mkdir -p "$DUMP_LOC"
+    $MYSQL_DUMP_BINARY --user=$DB_USER --password=$DB_PASSWD --opt $DB_NAME > "$DUMP_LOC/sql-dump.sql";
+#else
+    #echo "#sql not found in $MESSAGE, will not touch db."
+fi

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+LASTCOMMIT=`git rev-parse HEAD`
+GIT_USER=$(git config user.email)
+
+git add -A
+git commit -m "AUTO: Added Latest sql-dump for $LASTCOMMIT for user $GIT_USER"
